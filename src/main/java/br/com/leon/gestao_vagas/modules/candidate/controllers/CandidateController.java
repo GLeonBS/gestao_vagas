@@ -1,7 +1,21 @@
 package br.com.leon.gestao_vagas.modules.candidate.controllers;
 
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import br.com.leon.gestao_vagas.modules.candidate.CandidateEntity;
 import br.com.leon.gestao_vagas.modules.candidate.dto.ProfileCandidateResponseDTO;
+import br.com.leon.gestao_vagas.modules.candidate.useCases.ApplyJobCandidateUseCase;
 import br.com.leon.gestao_vagas.modules.candidate.useCases.CreateCandidadeUseCase;
 import br.com.leon.gestao_vagas.modules.candidate.useCases.ListAllJobsByFilterUseCase;
 import br.com.leon.gestao_vagas.modules.candidate.useCases.ProfileCandidateUseCase;
@@ -16,13 +30,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/candidate")
@@ -37,6 +44,9 @@ public class CandidateController {
 
     @Autowired
     private ListAllJobsByFilterUseCase listAllJobsByFilterUseCase;
+
+    @Autowired
+    private ApplyJobCandidateUseCase applyJobCandidateUseCase;
 
     @PostMapping("/")
     @Operation(summary = "Cadastro de candidato", description = "Essa função é resposável "
@@ -91,5 +101,22 @@ public class CandidateController {
     @SecurityRequirement(name = "jwt_auth")
     public List<JobEntity> findByJobFilter(@RequestParam String filter){
         return listAllJobsByFilterUseCase.execute(filter);
+    }
+
+    @PostMapping("/job/apply")
+    @PreAuthorize("hasRole('CANDIDATE')")
+    @Operation(summary = "Inscrição do candidato para uma vaga", description = "Essa função é resposável "
+            + "por inscrever o candidato em uma vaga")
+    @SecurityRequirement(name = "jwt_auth")
+    public ResponseEntity<Object> applyJob(HttpServletRequest request, @RequestBody UUID jobId){
+
+        var idCandidate = request.getAttribute("candidate_id");
+
+        try {
+            var result = this.applyJobCandidateUseCase.execute(UUID.fromString(idCandidate.toString()), jobId);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
