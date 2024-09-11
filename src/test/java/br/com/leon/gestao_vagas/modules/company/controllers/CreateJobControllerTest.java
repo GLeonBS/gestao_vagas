@@ -15,13 +15,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import br.com.leon.gestao_vagas.exceptions.CompanyNotFoundException;
 import br.com.leon.gestao_vagas.modules.company.dto.CreateJobDTO;
 import br.com.leon.gestao_vagas.modules.company.entities.CompanyEntity;
 import br.com.leon.gestao_vagas.modules.company.repositories.CompanyRepository;
 import br.com.leon.gestao_vagas.utils.TestUtils;
 
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -89,7 +87,7 @@ public class CreateJobControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(TestUtils.objectToJson(createJobDTO))
                 .header("Authorization", TestUtils.generateToken(UUID.randomUUID(), "JAVAGAS_@123#"))
-        ).andExpect(result -> assertInstanceOf(CompanyNotFoundException.class, result.getResolvedException()));
+        ).andExpect(status().isBadRequest());
     }
 
 }
