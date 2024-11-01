@@ -1,21 +1,24 @@
 package br.com.leon.gestao_vagas.modules.candidate.useCases;
 
-import br.com.leon.gestao_vagas.modules.candidate.CandidateEntity;
-import br.com.leon.gestao_vagas.modules.candidate.CandidateRepository;
-import br.com.leon.gestao_vagas.modules.candidate.dto.AuthCandidateRequestDTO;
-import br.com.leon.gestao_vagas.modules.candidate.dto.AuthCandidateResponseDTO;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Arrays;
+
+import javax.naming.AuthenticationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.naming.AuthenticationException;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Arrays;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+
+import br.com.leon.gestao_vagas.modules.candidate.CandidateEntity;
+import br.com.leon.gestao_vagas.modules.candidate.CandidateRepository;
+import br.com.leon.gestao_vagas.modules.candidate.dto.AuthCandidateRequestDTO;
+import br.com.leon.gestao_vagas.modules.candidate.dto.AuthCandidateResponseDTO;
 
 @Service
 public class AuthCandidateUseCase {
@@ -52,7 +55,7 @@ public class AuthCandidateUseCase {
 
         AuthCandidateResponseDTO authCandidateResponse = AuthCandidateResponseDTO
                 .builder()
-                .acess_token(token)
+                .access_token(token)
                 .expires_in(expiresIn.toEpochMilli())
                 .build();
 

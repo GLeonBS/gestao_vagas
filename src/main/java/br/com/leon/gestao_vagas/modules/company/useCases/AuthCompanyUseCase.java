@@ -1,21 +1,24 @@
 package br.com.leon.gestao_vagas.modules.company.useCases;
 
-import br.com.leon.gestao_vagas.modules.company.dto.AuthCompanyDTO;
-import br.com.leon.gestao_vagas.modules.company.dto.AuthCompanyResponseDTO;
-import br.com.leon.gestao_vagas.modules.company.entities.CompanyEntity;
-import br.com.leon.gestao_vagas.modules.company.repositories.CompanyRepository;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Arrays;
+
+import javax.naming.AuthenticationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.naming.AuthenticationException;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Arrays;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+
+import br.com.leon.gestao_vagas.modules.company.dto.AuthCompanyDTO;
+import br.com.leon.gestao_vagas.modules.company.dto.AuthCompanyResponseDTO;
+import br.com.leon.gestao_vagas.modules.company.entities.CompanyEntity;
+import br.com.leon.gestao_vagas.modules.company.repositories.CompanyRepository;
 
 @Service
 public class AuthCompanyUseCase {
@@ -51,7 +54,7 @@ public class AuthCompanyUseCase {
                 .sign(algorithm);
 
         return AuthCompanyResponseDTO.builder()
-                .acess_token(token)
+                .access_token(token)
                 .expires_in(expiresIn.toEpochMilli())
                 .build();
     }
