@@ -47,14 +47,17 @@ public class AuthCompanyUseCase {
 
         Instant expiresIn = Instant.now().plus(Duration.ofHours(2));
 
+        var roles = Arrays.asList("COMPANY");
+
         String token = JWT.create().withIssuer("javagas")
                 .withExpiresAt(expiresIn)
                 .withSubject(company.getId().toString())
-                .withClaim("roles", Arrays.asList("COMPANY"))
+                .withClaim("roles", roles)
                 .sign(algorithm);
 
         return AuthCompanyResponseDTO.builder()
                 .access_token(token)
+                .roles(roles)
                 .expires_in(expiresIn.toEpochMilli())
                 .build();
     }
